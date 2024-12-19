@@ -1,0 +1,24 @@
+spring:
+  # H2 데이터베이스 설정
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  # JPA 설정
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop  # 테스트 시작시 테이블 생성, 종료시 삭제
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true  # 초기 데이터 로딩을 위한 설정
+  # SQL 초기화 설정
+  sql:
+    init:
+      mode: always  # 항상 SQL 스크립트 실행
+      schema-locations: classpath:h2/schema.sql  # 스키마 정의
