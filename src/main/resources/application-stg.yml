@@ -1,0 +1,28 @@
+spring:
+  main:
+    web-application-type: none
+  datasource:
+    url: jdbc:mariadb://43.200.223.251:3306/klol
+    username: username
+    password: password
+    driver-class-name: org.mariadb.jdbc.Driver
+  # JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  data:
+    mongodb:
+      uri: mongodb+srv://klol:P!ssw0rd@klol-serverless-mongo.bsyduxf.mongodb.net/
+      database: klol
+  batch:
+    job:
+      enabled: ${job.enabled:false}
+      names: ${job.name:NONE}
+    jdbc:
+      initialize-schema: always
+  config:
+    import:
+      - riot.yml
+log:
+  directory: /home/ec2-user/logs/batch
