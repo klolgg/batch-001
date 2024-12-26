@@ -1,0 +1,8 @@
+riot:
+  domain: https://asia.api.riotgames.com
+  api:
+    account-v1:
+      account-by-riot-id: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
+    match-v5:
+      match-list-by-puuid: /lol/match/v5/matches/by-puuid/{puuid}/ids
+      match-detail-by-match-id: /lol/match/v5/matches/{matchId}
