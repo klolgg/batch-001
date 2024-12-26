@@ -1,0 +1,23 @@
+spring:
+  main:
+    web-application-type: none
+  datasource:
+    # jdbc-url: jdbc:mariadb://변경필요:3306/klol
+    username: kloluser
+    password: P!ssw0rd
+    driver-class-name: org.mariadb.jdbc.Driver
+  # JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  data:
+    mongodb:
+      uri: mongodb+srv://klol:P!ssw0rd@klol-cluster0.mizxq.mongodb.net/
+
+riot:
+  domain: https://asia.api.riotgames.com
+  api:
+    account-v1:
+      account-by-riot-id: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
+    match-v5:
+      match-list-by-puuid: /lol/match/v5/matches/by-puuid/{puuid}/ids

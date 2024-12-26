@@ -121,3 +121,5 @@ replay_pid*
 
 build/
 HELP.md
+
+application-local.yml

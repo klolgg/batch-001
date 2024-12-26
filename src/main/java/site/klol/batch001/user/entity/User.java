@@ -5,28 +5,31 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.klol.batch001.common.enums.YNFlag;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="seq_no")
     private Long seqNo;
 
-    @Column(unique = true)
-    private Long kakaoId;
+    @Column(name="kakaoId", unique = true)
+    private String kakaoId;
 
-    @Column(nullable = false)
+    @Column(name="nickname", nullable = false)
     private String nickname;
 
-    @Column(nullable = false, length = 1)
-    private String isSchoolVerified;
+    @Column(name="is_school_verified", nullable = false, length = 1)
+    @Enumerated(EnumType.STRING)
+    private YNFlag isSchoolVerified;
 
     @Builder
-    public User(Long kakaoId, String nickname, String isSchoolVerified) {
+    public User(String kakaoId, String nickname, YNFlag isSchoolVerified) {
         this.kakaoId = kakaoId;
         this.nickname = nickname;
         this.isSchoolVerified = isSchoolVerified;
