@@ -1,0 +1,47 @@
+name: Code deploy
+
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 코드 체크아웃
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. java 환경 설정
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      # 3. JAR 빌드
+      - name: Build JAR
+        run: |
+          ./gradlew clean build -x test
+          mkdir -p build-output
+          cp build/libs/batch001-0.0.1-SNAPSHOT.jar build-output/batch001.jar      
+      
+      # 4. SSH 설정
+      - name: Create SSH Key
+        run: | 
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/private-key.pem
+          chmod 600 ~/private-key.pem
+          ssh-keyscan ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts      
+      # 5. jar 파일 전송
+      - name: Copy files to remote server
+        run: |
+          scp -i ~/private-key.pem -r build-output/batch001.jar ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
+          echo "Copied files to remote server"
+       
+      # 6. EC2에서 배포 스크립트 실행
+      #- name: Run deploy script on EC2
+      #  run: |
+      #    ssh -i ~/.ssh/id_rsa ubuntu@<EC2_PUBLIC_IP> "bash /home/ubuntu/deploy.sh"
