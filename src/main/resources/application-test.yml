@@ -1,0 +1,40 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  main:
+    web-application-type: none
+  # H2 데이터베이스 설정
+  datasource:
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL;NON_KEYWORDS=USER
+  # JPA 설정
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+  sql:
+    init:
+      mode: always  # 항상 SQL 스크립트 실행
+      schema-locations: classpath:h2/schema.sql  # 스키마 정의
+  data:
+    mongodb:
+      uri: mongodb+srv://klol:P!ssw0rd@klol-cluster0.mizxq.mongodb.net/
+      database: klol
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+  config:
+    import:
+      - riot.yml
+log:
+  directory: ./logs
