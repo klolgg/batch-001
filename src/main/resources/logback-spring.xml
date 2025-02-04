@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <springProperty scope="context" name="LOG_DIR" source="log.directory"/>
+    <!-- todo: 서버 다중화 할 때 고려-->
+    <if condition='property("appender.console").equalsIgnoreCase("true")'>
+        <then>
+            <include resource="logback-console-appender.xml"/>
+        </then>
+    </if>
+    <if condition='property("appender.file").equalsIgnoreCase("true")'>
+        <then>
+            <include resource="logback-file-appender.xml"/>
+        </then>
+    </if>
+</configuration>
