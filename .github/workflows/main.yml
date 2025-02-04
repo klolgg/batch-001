@@ -45,3 +45,4 @@ jobs:
       #- name: Run deploy script on EC2
       #  run: |
       #    ssh -i ~/.ssh/id_rsa ubuntu@<EC2_PUBLIC_IP> "bash /home/ubuntu/deploy.sh"
+      # ssh -i ~/private-key.pem ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}
