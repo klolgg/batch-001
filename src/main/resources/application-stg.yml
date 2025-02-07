@@ -13,7 +13,7 @@ spring:
     show-sql: true
   data:
     mongodb:
-      uri: mongodb+srv://klol:P!ssw0rd@klol-serverless-mongo.bsyduxf.mongodb.net/
+      uri: mongodb+srv://klol:P!ssw0rd@klol-cluster0.mizxq.mongodb.net/?retryWrites=true&w=majority&appName=klol-Cluster0
       database: klol
   batch:
     job:
