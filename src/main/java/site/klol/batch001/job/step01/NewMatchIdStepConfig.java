@@ -1,12 +1,10 @@
 package site.klol.batch001.job.step01;
 
 import jakarta.persistence.EntityManagerFactory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.repository.JobRepository;
@@ -20,11 +18,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.CollectionUtils;
+import site.klol.batch001.common.exception.NoSkipException;
 import site.klol.batch001.match.dto.MatchIdDTO;
 import site.klol.batch001.match.entity.MatchHistory;
 import site.klol.batch001.match.repository.MatchHistoryRepository;
-import site.klol.batch001.riot.RiotAPIService;
+import site.klol.batch001.riot.service.V1RiotAPIService;
 import site.klol.batch001.summoner.entity.Summoner;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Configuration for the first step of the batch job that processes new match IDs.
@@ -41,7 +44,7 @@ public class NewMatchIdStepConfig {
     private final MatchHistoryRepository matchHistoryRepository;
     private final JobRepository jobRepository;
     private final EntityManagerFactory emf;
-    private final RiotAPIService riotAPIService;
+    private final V1RiotAPIService v1RiotAPIService;
 
     private static final int CHUNK_SIZE = 10;
     private static final String QUERY_STRING = "SELECT s FROM Summoner s";
@@ -50,15 +53,15 @@ public class NewMatchIdStepConfig {
 
     @Bean
     @JobScope
-    public Step newMatchIdStep(PlatformTransactionManager transactionManager) {
+    public Step newMatchIdStep(PlatformTransactionManager transactionManager, StepExecutionListener batchTerminationStepListener) {
         return new StepBuilder(STEP_NAME, jobRepository)
             .<Summoner, List<MatchHistory>>chunk(CHUNK_SIZE, transactionManager)
             .reader(summonerJpaPagingItemReader())
             .processor(compositeProcessor())
             .writer(newMatchIdListWriter())
             .faultTolerant()
-            .retry(Exception.class)
-            .retryLimit(3)
+            .noSkip(NoSkipException.class)
+            .listener(batchTerminationStepListener)
             .build();
     }
 
@@ -91,29 +94,24 @@ public class NewMatchIdStepConfig {
     @StepScope
     public ItemProcessor<Summoner, MatchIdDTO> riotMatchIdProcessor() {
         return summoner -> {
-            try {
-                log.debug("Processing summoner: {}", summoner.getSummonerId());
-                final String id = summoner.getSummonerId();
-                final String tag = summoner.getSummonerTag();
+            log.debug("Processing summoner: {}", summoner.getSummonerId());
+            final String id = summoner.getSummonerId();
+            final String tag = summoner.getSummonerTag();
 
-                final String puuid = riotAPIService.getPuuid(id, tag);
-                if (puuid == null) {
-                    log.warn("Failed to get PUUID for summoner: {}", id);
-                    return null;
-                }
-
-                final List<String> matchIdList = riotAPIService.getMatchIdList(puuid);
-                if (CollectionUtils.isEmpty(matchIdList)) {
-                    log.info("No matches found for summoner: {}", id);
-                    return null;
-                }
-
-                log.debug("Found {} matches for summoner: {}", matchIdList.size(), id);
-                return new MatchIdDTO(summoner, matchIdList);
-            } catch (Exception e) {
-                log.error("Error processing summoner: {}", summoner.getSummonerId(), e);
-                throw e;
+            final String puuid = v1RiotAPIService.getPUUID(id, tag);
+            if (puuid == null) {
+                log.warn("Failed to get PUUID for summoner: {}", id);
+                return null;
             }
+
+            final List<String> matchIdList = v1RiotAPIService.getMatchIdList(puuid);
+            if (CollectionUtils.isEmpty(matchIdList)) {
+                log.info("No matches found for summoner: {}", id);
+                return null;
+            }
+
+            log.debug("Found {} matches for summoner: {}", matchIdList.size(), id);
+            return new MatchIdDTO(summoner, matchIdList);
         };
     }
 
@@ -121,24 +119,19 @@ public class NewMatchIdStepConfig {
     @StepScope
     public ItemProcessor<MatchIdDTO, List<MatchHistory>> newMatchIdFilteringProcessor() {
         return matchIdDto -> {
-            try {
-                final Summoner summoner = matchIdDto.getSummoner();
-                log.debug("Filtering matches for summoner: {}", summoner.getSummonerId());
+            final Summoner summoner = matchIdDto.getSummoner();
+            log.debug("Filtering matches for summoner: {}", summoner.getSummonerId());
 
-                final List<String> oldMatchIdList = findOldMatchIdList(summoner);
-                final List<MatchHistory> newMatchHistories = getNewMatchHistories(matchIdDto, oldMatchIdList, summoner);
+            final List<String> oldMatchIdList = findOldMatchIdList(summoner);
+            final List<MatchHistory> newMatchHistories = getNewMatchHistories(matchIdDto, oldMatchIdList, summoner);
 
-                if (newMatchHistories.isEmpty()) {
-                    log.info("No new matches found for summoner: {}", summoner.getSummonerId());
-                    return null;
-                }
-
-                log.debug("Found {} new matches for summoner: {}", newMatchHistories.size(), summoner.getSummonerId());
-                return newMatchHistories;
-            } catch (Exception e) {
-                log.error("Error filtering matches for summoner: {}", matchIdDto.getSummoner().getSummonerId(), e);
-                throw e;
+            if (newMatchHistories.isEmpty()) {
+                log.info("No new matches found for summoner: {}", summoner.getSummonerId());
+                return null;
             }
+
+            log.debug("Found {} new matches for summoner: {}", newMatchHistories.size(), summoner.getSummonerId());
+            return newMatchHistories;
         };
     }
 
