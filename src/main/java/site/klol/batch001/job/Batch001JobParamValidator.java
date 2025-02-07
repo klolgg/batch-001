@@ -33,7 +33,7 @@ public class Batch001JobParamValidator implements JobParametersValidator {
             throw new JobParametersInvalidException("Job parameters must not be null");
         }
 
-        if (isManualRun(jobParameters)) {
+        if (!isManualRun(jobParameters)) {
             validateRequestDate(jobParameters);
             validateRequestTime(jobParameters);
         }
@@ -45,7 +45,7 @@ public class Batch001JobParamValidator implements JobParametersValidator {
         String isManualRun = Optional.ofNullable(jobParameters.getString(JobParamConstant.IS_MANUAL_RUN))
                 .orElse("N");
 
-        if ("Y".equalsIgnoreCase(isManualRun) && !"N".equalsIgnoreCase(isManualRun)) {
+        if (!"Y".equalsIgnoreCase(isManualRun) && !"N".equalsIgnoreCase(isManualRun)) {
             throw new JobParametersInvalidException(
                 String.format("Invalid isManualRun parameter: %s. Must be 'Y' or 'N'", isManualRun));
         }

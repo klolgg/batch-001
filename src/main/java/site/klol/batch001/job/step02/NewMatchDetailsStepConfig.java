@@ -1,10 +1,9 @@
 package site.klol.batch001.job.step02;
 
-import static site.klol.batch001.match.constants.MatchDetailsConstants.MATCH_DETAILS_COLLECTION_NAME;
-
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.repository.JobRepository;
@@ -18,15 +17,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
+import site.klol.batch001.common.exception.NoSkipException;
 import site.klol.batch001.match.entity.MatchHistory;
-import site.klol.batch001.riot.RiotAPIService;
+import site.klol.batch001.riot.service.V1RiotAPIService;
+
+import static site.klol.batch001.match.constants.MatchDetailsConstants.MATCH_DETAILS_COLLECTION_NAME;
 
 @Configuration
 @RequiredArgsConstructor
 public class NewMatchDetailsStepConfig {
     private final JobRepository jobRepository;
     private final EntityManagerFactory emf;
-    private final RiotAPIService riotAPIService;
+    private final V1RiotAPIService v1RiotAPIService;
     private final MongoTemplate mongoTemplate;
 
     private static final int CHUNK_SIZE = 10;
@@ -36,12 +38,15 @@ public class NewMatchDetailsStepConfig {
 
     @Bean
     @JobScope
-    public Step newMatchDetailsStep(PlatformTransactionManager transactionManager) {
+    public Step newMatchDetailsStep(PlatformTransactionManager transactionManager, StepExecutionListener batchTerminationStepListener) {
         return new StepBuilder(STEP_NAME, jobRepository)
             .<MatchHistory, Object>chunk(CHUNK_SIZE, transactionManager)
             .reader(newMatchIdJpaPagingItemReader())
             .processor(matchDetailsProcessor())
             .writer(matchDetailsWriter())
+            .faultTolerant()
+            .noSkip(NoSkipException.class)
+            .listener(batchTerminationStepListener)
             .build();
     }
     @Bean
@@ -57,7 +62,7 @@ public class NewMatchDetailsStepConfig {
     @Bean
     @StepScope
     public ItemProcessor<MatchHistory, Object> matchDetailsProcessor() {
-        return matchHistory -> riotAPIService.getMatchDetails(matchHistory.getMatchId());
+        return matchHistory -> v1RiotAPIService.getMatchDetails(matchHistory.getMatchId());
     }
 
     @Bean

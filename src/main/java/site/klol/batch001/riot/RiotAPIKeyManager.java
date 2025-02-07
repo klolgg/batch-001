@@ -1,6 +1,7 @@
 package site.klol.batch001.riot;
 
 import org.springframework.stereotype.Component;
+import site.klol.batch001.riot.exception.RiotKeyNotFoundException;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -24,7 +25,7 @@ public class RiotAPIKeyManager {
         if(!isExpired()) return;
 
         final String newApiKey = Optional.ofNullable(System.getenv(API_KEY_ENV_NAME))
-            .orElseThrow(() -> new RuntimeException("Missing environment variable " + API_KEY_ENV_NAME));
+            .orElseThrow(() -> new RiotKeyNotFoundException("Missing environment variable " + API_KEY_ENV_NAME));
 
         this.apiKey = newApiKey;
     }
