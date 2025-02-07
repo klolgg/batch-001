@@ -1,14 +1,16 @@
-package site.klol.batch001.riot;
+package site.klol.batch001.riot.service;
 
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import site.klol.batch001.riot.RiotURLResolver;
 import site.klol.batch001.riot.dto.AccountDTO;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
     <h1> Riot API 4xx CODES</h1>
@@ -54,11 +56,12 @@ import site.klol.batch001.riot.dto.AccountDTO;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class RiotAPIService extends AbstractRestService {
+public class V1RiotAPIService extends AbstractRestService {
     private final RestTemplate restTemplate;
     private final RiotURLResolver riotURLResolver;
 
-    public String getPuuid(String gameName, String tagLine) {
+    @Override
+    public String getPUUID(String gameName, String tagLine) {
         final String fullURL = riotURLResolver.getRiotAccountURL(gameName, tagLine);
 
         return doExecute(() -> {
@@ -69,6 +72,7 @@ public class RiotAPIService extends AbstractRestService {
                 .orElse(null);
         });
     }
+    @Override
     public List<String> getMatchIdList(String puuid) {
         final String fullURL = riotURLResolver.getMatchListURL(puuid);
 
@@ -76,7 +80,7 @@ public class RiotAPIService extends AbstractRestService {
             restTemplate.exchange(fullURL, HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {}).getBody()
         );
     }
-
+    @Override
     public Object getMatchDetails(String matchId) {
         final String fullURL = riotURLResolver.getMatchDetailURL(matchId);
 
