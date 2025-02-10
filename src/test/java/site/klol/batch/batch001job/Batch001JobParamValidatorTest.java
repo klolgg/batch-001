@@ -1,4 +1,4 @@
-package site.klol.batch.job;
+package site.klol.batch.batch001job;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -7,7 +7,7 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.JobParametersValidator;
-import site.klol.batch.job.constants.JobParamConstant;
+import site.klol.batch.batch001job.constants.JobParamConstant;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

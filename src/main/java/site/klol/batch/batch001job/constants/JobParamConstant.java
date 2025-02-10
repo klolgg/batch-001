@@ -1,4 +1,4 @@
-package site.klol.batch.job.constants;
+package site.klol.batch.batch001job.constants;
 
 public final class JobParamConstant {
     public static final String REQUEST_DATE = "requestDate";

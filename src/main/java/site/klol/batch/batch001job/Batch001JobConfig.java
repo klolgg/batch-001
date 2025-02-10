@@ -1,4 +1,4 @@
-package site.klol.batch.job;
+package site.klol.batch.batch001job;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

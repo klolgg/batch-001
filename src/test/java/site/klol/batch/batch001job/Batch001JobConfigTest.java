@@ -1,4 +1,4 @@
-package site.klol.batch.job;
+package site.klol.batch.batch001job;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import site.klol.batch.batch001job.constants.JobParamConstant;
 import site.klol.batch.common.enums.YNFlag;
-import site.klol.batch.job.constants.JobParamConstant;
 import site.klol.batch.match.entity.MatchHistory;
 import site.klol.batch.match.repository.MatchHistoryRepository;
 import site.klol.batch.summoner.entity.Summoner;

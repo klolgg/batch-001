@@ -1,4 +1,4 @@
-package site.klol.batch.job.step01;
+package site.klol.batch.batch001job.step01;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.Chunk;
