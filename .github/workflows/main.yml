@@ -26,7 +26,7 @@ jobs:
         run: |
           ./gradlew clean build -x test
           mkdir -p build-output
-          cp build/libs/batch001-0.0.1-SNAPSHOT.jar build-output/batch001.jar      
+          cp build/libs/batch-0.0.1-SNAPSHOT.jar build-output/batch.jar      
       
       # 4. SSH 설정
       - name: Create SSH Key
@@ -38,11 +38,5 @@ jobs:
       # 5. jar 파일 전송
       - name: Copy files to remote server
         run: |
-          scp -i ~/private-key.pem -r build-output/batch001.jar ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
+          scp -i ~/private-key.pem -r build-output/batch.jar ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
           echo "Copied files to remote server"
-       
-      # 6. EC2에서 배포 스크립트 실행
-      #- name: Run deploy script on EC2
-      #  run: |
-      #    ssh -i ~/.ssh/id_rsa ubuntu@<EC2_PUBLIC_IP> "bash /home/ubuntu/deploy.sh"
-      # ssh -i ~/private-key.pem ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}
