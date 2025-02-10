@@ -1,15 +1,14 @@
 package site.klol.batch.riot;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import site.klol.batch.common.LoggerContext;
 
 import java.util.function.Supplier;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class RiotURLResolver {
     @Value("${riot.domain}")
     private String domain;
@@ -35,8 +34,9 @@ public class RiotURLResolver {
         return getURL(() -> matchDetailURL.replace("{matchId}", matchId));
     }
     private String getURL(Supplier<String> supplier) {
+
         final String url = supplier.get();
-        log.info("URL: {}", url);
+        LoggerContext.getLogger().info("URL: {}", url);
 
         return domain + addAPIKey(url);
     }

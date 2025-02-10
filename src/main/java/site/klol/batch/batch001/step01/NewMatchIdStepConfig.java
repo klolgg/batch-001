@@ -2,7 +2,6 @@ package site.klol.batch.batch001.step01;
 
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.annotation.JobScope;
@@ -18,6 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.CollectionUtils;
+import site.klol.batch.common.LoggerContext;
 import site.klol.batch.common.exception.NoSkipException;
 import site.klol.batch.match.dto.MatchIdDTO;
 import site.klol.batch.match.entity.MatchHistory;
@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
  * 3. Filters out already processed matches
  * 4. Saves new match histories to the database
  */
-@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class NewMatchIdStepConfig {
@@ -68,7 +67,7 @@ public class NewMatchIdStepConfig {
     @Bean
     @StepScope
     public JpaPagingItemReader<Summoner> summonerJpaPagingItemReader() {
-        log.debug("Initializing summoner paging item reader");
+        LoggerContext.getLogger().debug("Initializing summoner paging item reader");
         return new JpaPagingItemReaderBuilder<Summoner>()
             .name(READER_NAME)
             .entityManagerFactory(emf)
@@ -94,16 +93,16 @@ public class NewMatchIdStepConfig {
     @StepScope
     public ItemProcessor<Summoner, MatchIdDTO> riotMatchIdProcessor() {
         return summoner -> {
-            log.debug("Processing summoner: {}", summoner.getSummonerId());
+            LoggerContext.getLogger().debug("Processing summoner: {}", summoner.getSummonerId());
             String puuid = summoner.getPuuid();
 
             final List<String> matchIdList = v1RiotAPIService.getMatchIdList(puuid);
             if (CollectionUtils.isEmpty(matchIdList)) {
-                log.info("No matches found for summoner: {}#{}", summoner.getSummonerId(), summoner.getSummonerTag());
+                LoggerContext.getLogger().info("No matches found for summoner: {}#{}", summoner.getSummonerId(), summoner.getSummonerTag());
                 return null;
             }
 
-            log.debug("Found {} matches for summoner: {}#{}", matchIdList.size(), summoner.getSummonerId(), summoner.getSummonerTag());
+            LoggerContext.getLogger().debug("Found {} matches for summoner: {}#{}", matchIdList.size(), summoner.getSummonerId(), summoner.getSummonerTag());
             return new MatchIdDTO(summoner, matchIdList);
         };
     }
@@ -113,17 +112,17 @@ public class NewMatchIdStepConfig {
     public ItemProcessor<MatchIdDTO, List<MatchHistory>> newMatchIdFilteringProcessor() {
         return matchIdDto -> {
             final Summoner summoner = matchIdDto.getSummoner();
-            log.debug("Filtering matches for summoner: {}", summoner.getSummonerId());
+            LoggerContext.getLogger().debug("Filtering matches for summoner: {}", summoner.getSummonerId());
 
             final List<String> oldMatchIdList = findOldMatchIdList(summoner);
             final List<MatchHistory> newMatchHistories = getNewMatchHistories(matchIdDto, oldMatchIdList, summoner);
 
             if (newMatchHistories.isEmpty()) {
-                log.info("No new matches found for summoner: {}", summoner.getSummonerId());
+                LoggerContext.getLogger().info("No new matches found for summoner: {}", summoner.getSummonerId());
                 return null;
             }
 
-            log.debug("Found {} new matches for summoner: {}", newMatchHistories.size(), summoner.getSummonerId());
+            LoggerContext.getLogger().debug("Found {} new matches for summoner: {}", newMatchHistories.size(), summoner.getSummonerId());
             return newMatchHistories;
         };
     }
@@ -144,7 +143,7 @@ public class NewMatchIdStepConfig {
     @Bean
     @StepScope
     public JpaItemListWriter<MatchHistory> newMatchIdListWriter() {
-        log.debug("Initializing match history list writer");
+        LoggerContext.getLogger().debug("Initializing match history list writer");
         JpaItemWriter<MatchHistory> matchHistoryJpaItemWriter = new JpaItemWriter<>();
         JpaItemListWriter<MatchHistory> matchHistoryJpaItemListWriter = new JpaItemListWriter<>(matchHistoryJpaItemWriter);
         

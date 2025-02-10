@@ -1,7 +1,6 @@
 package site.klol.batch.riot.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -55,7 +54,6 @@ import java.util.Optional;
  */
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class V1RiotAPIService extends AbstractRestService {
     private final RestTemplate restTemplate;
     private final RiotURLResolver riotURLResolver;

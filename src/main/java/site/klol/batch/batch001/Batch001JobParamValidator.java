@@ -1,11 +1,11 @@
 package site.klol.batch.batch001;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.JobParametersValidator;
 import org.springframework.stereotype.Component;
 import site.klol.batch.batch001.constants.JobParamConstant;
+import site.klol.batch.common.LoggerContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,7 +17,6 @@ import java.util.Optional;
  * Validates job parameters for the batch001 job.
  * Ensures that date, time, and manual run parameters are properly formatted and valid.
  */
-@Slf4j
 @Component
 public class Batch001JobParamValidator implements JobParametersValidator {
 
@@ -27,7 +26,7 @@ public class Batch001JobParamValidator implements JobParametersValidator {
 
     @Override
     public void validate(JobParameters jobParameters) throws JobParametersInvalidException {
-        log.debug("Validating job parameters: {}", jobParameters);
+        LoggerContext.getLogger().debug("Validating job parameters: {}", jobParameters);
         
         if (jobParameters == null) {
             throw new JobParametersInvalidException("Job parameters must not be null");
@@ -38,7 +37,7 @@ public class Batch001JobParamValidator implements JobParametersValidator {
             validateRequestTime(jobParameters);
         }
 
-        log.info("Job parameters validation successful");
+        LoggerContext.getLogger().info("Job parameters validation successful");
     }
 
     private boolean isManualRun(JobParameters jobParameters) throws JobParametersInvalidException {
