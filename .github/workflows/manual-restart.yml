@@ -8,12 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       - name: Create SSH Key
         run: |
           mkdir -p ~.ssh
-          chmod 700 ~/.ssh
-          touch ~/.ssh/known_hosts
-          chmod 600 ~/.ssh/known_hosts
           echo "${{ secrets.SSH_KEY }}" > ~/private-key.pem
           chmod 600 ~/private-key.pem
           ssh-keyscan ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
