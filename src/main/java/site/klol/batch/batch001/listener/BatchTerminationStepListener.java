@@ -1,4 +1,4 @@
-package site.klol.batch.batch001job.listener;
+package site.klol.batch.batch001.listener;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ExitStatus;

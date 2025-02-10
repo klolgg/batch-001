@@ -1,4 +1,4 @@
-package site.klol.batch.batch001job.step02;
+package site.klol.batch.batch001.step02;
 
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;

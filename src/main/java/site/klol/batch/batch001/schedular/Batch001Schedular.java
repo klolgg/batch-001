@@ -1,4 +1,4 @@
-package site.klol.batch.batch001job.schedular;
+package site.klol.batch.batch001.schedular;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import site.klol.batch.batch001job.constants.JobParamConstant;
+import site.klol.batch.batch001.constants.JobParamConstant;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

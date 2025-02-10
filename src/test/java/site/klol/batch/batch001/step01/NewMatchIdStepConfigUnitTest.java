@@ -1,4 +1,4 @@
-package site.klol.batch.batch001job.step01;
+package site.klol.batch.batch001.step01;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

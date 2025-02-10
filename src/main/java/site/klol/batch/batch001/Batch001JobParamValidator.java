@@ -1,11 +1,11 @@
-package site.klol.batch.batch001job;
+package site.klol.batch.batch001;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.JobParametersValidator;
 import org.springframework.stereotype.Component;
-import site.klol.batch.batch001job.constants.JobParamConstant;
+import site.klol.batch.batch001.constants.JobParamConstant;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
