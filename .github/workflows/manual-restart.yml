@@ -1,0 +1,19 @@
+name: Manual workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  restart:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create SSH Key
+        run: |
+          mkdir -p ~.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/private-key.pem
+          chmod 600 ~/private-key.pem
+          ssh-keyscan ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+      - name: restart batch
+        run: | 
+          ssh -i ~/private-key.pem ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} "bash /home/ec2-user/batch/restart.sh"
