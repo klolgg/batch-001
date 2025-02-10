@@ -1,4 +1,4 @@
-name: Manual workflow
+name: Manual restart
 
 on:
   workflow_dispatch:
@@ -11,8 +11,8 @@ jobs:
       - name: Create SSH Key
         run: |
           mkdir -p ~.ssh
-          touch ~/.ssh/known_hosts
           chmod 700 ~/.ssh
+          touch ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
           echo "${{ secrets.SSH_KEY }}" > ~/private-key.pem
           chmod 600 ~/private-key.pem
