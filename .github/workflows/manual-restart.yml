@@ -8,16 +8,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
       - name: Create SSH Key
         run: |
-          mkdir -p ~.ssh
+          mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/private-key.pem
           chmod 600 ~/private-key.pem
           ssh-keyscan ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
