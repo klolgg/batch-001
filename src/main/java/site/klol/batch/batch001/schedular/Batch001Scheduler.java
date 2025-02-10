@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 @Profile({"!cli","prd","schd"})
 @Slf4j
-public class Batch001Schedular {
+public class Batch001Scheduler {
     private final JobLauncher jobLauncher;
     private final Job batch001Job;
 
