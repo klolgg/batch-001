@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Batch00?마다 다른 파일에 저장되도록 설정하는 법
+    1. <property name="BATCH00?" value="batch00?"/> 추가
+    2. <appender name="${BATCH00?}" class="ch.qos.logback.core.rolling.RollingFileAppender"> ~ </appender> 복붙 후 ${BATCH00?} 알맞게 설정
+    3. <logger name="${ROOT_PACKAGE}.${BATCH001}" level="INFO" additivity="false"> ~ </logger> 복붙 후 ${BATCH00?} 알맞게 설정
+    4. <root level="info"> 밑에 <appender-ref ref="${BATCH00?}"/> 추가하기
+-->
 <included>
-    <!-- 로그 파일에 로그를 출력하는 설정 -->
-    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DIR}/batch001.log</file> <!--로그 파일 기본 경로-->
+    <property name="ROOT_PACKAGE" value="site.klol.batch"/>
+    <!-- appender name   -->
+    <property name="BATCH001" value="batch001"/>
+    <property name="BATCH002" value="batch002"/>
+
+    <!-- batch001 appender   -->
+    <appender name="${BATCH001}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${BATCH001}.log</file> <!--로그 파일 기본 경로-->
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 로그 파일의 이름 형식 지정 -->
-            <fileNamePattern>${LOG_DIR}/batch001-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_DIR}/${BATCH001}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!-- 하루 단위로 로그 파일 생성 -->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
                 <maxFileSize>100MB</maxFileSize>
@@ -18,7 +30,48 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+
+    <!-- batch002 appender   -->
+    <appender name="${BATCH002}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${BATCH002}.log</file> <!--로그 파일 기본 경로-->
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 로그 파일의 이름 형식 지정 -->
+            <fileNamePattern>${LOG_DIR}/${BATCH002}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 하루 단위로 로그 파일 생성 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFileNamingAndTriggeringPolicy">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 로그 보관 기간 지정 (3일) -->
+            <maxHistory>3</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- batch001 logger   -->
+    <logger name="${ROOT_PACKAGE}.${BATCH001}" level="INFO" additivity="false">
+        <appender-ref ref="${BATCH001}"/>
+        <if condition='property("appender.console").equalsIgnoreCase("true")'>
+            <then>
+                <appender-ref ref="console"/>
+            </then>
+        </if>
+    </logger>
+
+    <!-- batch002 logger   -->
+    <logger name="${ROOT_PACKAGE}.${BATCH002}" level="INFO" additivity="false">
+        <appender-ref ref="${BATCH002}"/>
+        <if condition='property("appender.console").equalsIgnoreCase("true")'>s
+            <then>
+                <appender-ref ref="console"/>
+            </then>
+        </if>
+    </logger>
+
     <root level="info">
-        <appender-ref ref="file"/>
+        <appender-ref ref="${BATCH001}"/>
+        <appender-ref ref="${BATCH002}"/>
     </root>
 </included>
