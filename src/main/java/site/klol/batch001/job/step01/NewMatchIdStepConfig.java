@@ -95,22 +95,15 @@ public class NewMatchIdStepConfig {
     public ItemProcessor<Summoner, MatchIdDTO> riotMatchIdProcessor() {
         return summoner -> {
             log.debug("Processing summoner: {}", summoner.getSummonerId());
-            final String id = summoner.getSummonerId();
-            final String tag = summoner.getSummonerTag();
-
-            final String puuid = v1RiotAPIService.getPUUID(id, tag);
-            if (puuid == null) {
-                log.warn("Failed to get PUUID for summoner: {}", id);
-                return null;
-            }
+            String puuid = summoner.getPuuid();
 
             final List<String> matchIdList = v1RiotAPIService.getMatchIdList(puuid);
             if (CollectionUtils.isEmpty(matchIdList)) {
-                log.info("No matches found for summoner: {}", id);
+                log.info("No matches found for summoner: {}#{}", summoner.getSummonerId(), summoner.getSummonerTag());
                 return null;
             }
 
-            log.debug("Found {} matches for summoner: {}", matchIdList.size(), id);
+            log.debug("Found {} matches for summoner: {}#{}", matchIdList.size(), summoner.getSummonerId(), summoner.getSummonerTag());
             return new MatchIdDTO(summoner, matchIdList);
         };
     }

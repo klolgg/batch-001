@@ -18,6 +18,7 @@ CREATE TABLE summoner (
     seq_no BIGINT NOT NULL AUTO_INCREMENT,
     user_seq_no BIGINT NOT NULL,
     is_main_summonner CHAR(1) NOT NULL,
+    puuid varchar(256) NOT NULL,
     smnr_id VARCHAR(50) NOT NULL,
     smnr_tag VARCHAR(50) NOT NULL,
     smnr_icon VARCHAR(255) DEFAULT 'default_icon_url',
@@ -33,7 +34,8 @@ CREATE TABLE summoner (
             ON DELETE CASCADE
             ON UPDATE CASCADE,
     CONSTRAINT chk_is_main_summonner
-        CHECK (is_main_summonner IN ('Y', 'N'))
+        CHECK (is_main_summonner IN ('Y', 'N')),
+    CONSTRAINT uq_puuid UNIQUE (puuid)
 );
 
 CREATE TABLE match_history (

@@ -34,6 +34,10 @@ public class Summoner extends BaseEntity {
     private YNFlag isMainSummoner;
 
     @NotNull
+    @Column(name ="puuid", unique = true, nullable = false, length = 256)
+    private String puuid;
+
+    @NotNull
     @Column(name = "smnr_id", nullable = false, length = 50)
     private String summonerId;
 

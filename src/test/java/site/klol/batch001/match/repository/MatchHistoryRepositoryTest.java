@@ -41,7 +41,7 @@ class MatchHistoryRepositoryTest {
         User user = User.of("kakaoId", "nickname", YNFlag.N);
         User saveUser = userRepository.save(user);
 
-        Summoner summoner = Summoner.builder().user(saveUser).summonerId("뾰로롱").summonerTag("1113").isMainSummoner(YNFlag.Y).build();
+        Summoner summoner = Summoner.builder().user(saveUser).summonerId("뾰로롱").summonerTag("1113").puuid("testPuuid").isMainSummoner(YNFlag.Y).build();
         Summoner saveSummoner = summonerRepository.save(summoner);
 
         MatchHistory match = MatchHistory.getNotUpdatedMatchHistory(saveSummoner, "matchId");
