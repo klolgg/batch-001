@@ -119,6 +119,8 @@ replay_pid*
 
 .gradle
 
+.vscode
+
 build/
 HELP.md
 
