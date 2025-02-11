@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.Immutable;
 import site.klol.batch.common.entity.BaseEntity;
 import site.klol.batch.common.enums.YNFlag;
+import site.klol.batch.riot.dto.AccountDTO;
 import site.klol.batch.user.entity.User;
 
 @Entity
@@ -56,4 +57,19 @@ public class Summoner extends BaseEntity {
 
     @Column(name = "smnr_lp")
     private Integer summonerLp;
+
+    public boolean isChangedAccount(AccountDTO accountByPUUID) {
+        final String gameName = accountByPUUID.getGameName();
+        final String tagLine = accountByPUUID.getTagLine();
+
+        return !(this.summonerId.equals(gameName) && this.summonerTag.equals(tagLine));
+    }
+
+    public void updateAccount(AccountDTO accountByPUUID) {
+        final String gameName = accountByPUUID.getGameName();
+        final String tagLine = accountByPUUID.getTagLine();
+
+        setSummonerId(gameName);
+        setSummonerTag(tagLine);
+    }
 }
