@@ -1,7 +1,10 @@
 package site.klol.batch.riot.service;
 
 import java.util.List;
+import java.util.Set;
 import site.klol.batch.riot.dto.AccountDTO;
+import site.klol.batch.riot.dto.LeagueEntryDTO;
+import site.klol.batch.riot.dto.SummonerDTO;
 
 public interface RiotAPIService {
 
@@ -32,4 +35,18 @@ public interface RiotAPIService {
      * @return
      */
     AccountDTO getAccountByPuuid(String puuid);
+
+    /**
+     * puuid로 summoner 정보 가져오는 API
+     * @param puuid
+     * @return
+     */
+    SummonerDTO getSummonerByPuuid(String puuid);
+
+    /**
+     * accountId로 league 정보 가져오는 API
+     * @param accountId
+     * @return
+     */
+    Set<LeagueEntryDTO> getLeagueEntriesInAllQueuesByAccountId(String accountId);
 }

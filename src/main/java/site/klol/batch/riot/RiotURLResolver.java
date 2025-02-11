@@ -18,12 +18,19 @@ public class RiotURLResolver {
     private final RiotProperties riotProperties;
     private final RiotAPIKeyManager riotAPIKeyManager;
 
-    public String getRiotAccountURL(String gameName, String tagLine) {
+    public String getRiotAccountByRiotIdURL(String gameName, String tagLine) {
         return new RiotURLBuilder(riotProperties, riotAPIKeyManager)
             .withRegion(riotProperties.getApi().getAccountV1().getRegion())
             .withEndpoint(riotProperties.getApi().getAccountV1().getAccountByRiotId())
             .withPathVariable("gameName", gameName)
             .withPathVariable("tagLine", tagLine)
+            .build();
+    }
+    public String getRiotAccountByPuuidURL(String puuid) {
+        return new RiotURLBuilder(riotProperties, riotAPIKeyManager)
+            .withRegion(riotProperties.getApi().getAccountV1().getRegion())
+            .withEndpoint(riotProperties.getApi().getAccountV1().getAccountByRiotId())
+            .withPathVariable("puuid", puuid)
             .build();
     }
     public String getMatchListURL(String puuid) {
@@ -41,6 +48,24 @@ public class RiotURLResolver {
             .withPathVariable("matchId", matchId)
             .build();
     }
+
+    public String getLeagueEntiresInAllQueuesByAccountIdURL(String summonerId) {
+        return new RiotURLBuilder(riotProperties, riotAPIKeyManager)
+            .withRegion(riotProperties.getApi().getLeagueV4().getRegion())
+            .withEndpoint(riotProperties.getApi().getLeagueV4().getLeagueEntriesInAllQueuesByAccountId())
+            .withPathVariable("encryptedSummonerId", summonerId)
+            .build();
+    }
+
+    public String getSummonerByPuuid(String puuid) {
+        return new RiotURLBuilder(riotProperties, riotAPIKeyManager)
+            .withRegion(riotProperties.getApi().getSummonerV4().getRegion())
+            .withEndpoint(riotProperties.getApi().getSummonerV4().getSummonerByPuuid())
+            .withPathVariable("encryptedPUUID", puuid)
+            .build();
+    }
+
+
 }
 
 class RiotURLBuilder {

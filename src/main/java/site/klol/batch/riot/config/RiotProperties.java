@@ -17,6 +17,8 @@ public class RiotProperties {
     public static class ApiProperties {
         private AccountV1Properties accountV1;
         private MatchV5Properties matchV5;
+        private LeagueV4Properties leagueV4;
+        private SummonerV4Properties summonerV4;
     }
 
     @Getter
@@ -24,6 +26,21 @@ public class RiotProperties {
     public static class AccountV1Properties {
         private String region;
         private String accountByRiotId;
+        private String accountByPuuid;
+    }
+
+    @Getter
+    @Setter
+    public static class LeagueV4Properties {
+        private String region;
+        private String leagueEntriesInAllQueuesByAccountId;
+    }
+
+    @Getter
+    @Setter
+    public static class SummonerV4Properties {
+        private String region;
+        private String summonerByPuuid;
     }
 
     @Getter

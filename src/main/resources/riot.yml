@@ -6,8 +6,10 @@ riot:
       account-by-riot-id: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
       account-by-puuid: /riot/account/v1/accounts/by-puuid/{puuid}
     league-v4:
+      region: kr
       league-entries-in-all-queues-by-account-id: /lol/league/v4/entries/by-summoner/{encryptedSummonerId}
     summoner-v4:
+      region: kr
       summoner-by-puuid: /lol/summoner/v4/summoners/by-puuid/{encryptedPUUID}
     match-v5:
       region: asia

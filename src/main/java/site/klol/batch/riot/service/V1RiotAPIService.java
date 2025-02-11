@@ -1,15 +1,28 @@
 package site.klol.batch.riot.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import site.klol.batch.common.LoggerContext;
 import site.klol.batch.riot.RiotURLResolver;
 import site.klol.batch.riot.dto.AccountDTO;
+import site.klol.batch.riot.dto.LeagueEntryDTO;
+import site.klol.batch.riot.dto.SummonerDTO;
+import site.klol.batch.riot.exception.RiotAPIException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
     <h1> Riot API 4xx CODES</h1>
@@ -53,44 +66,51 @@ import java.util.Optional;
     https://developer.riotgames.com/docs/portal
  */
 @Component
-@RequiredArgsConstructor
-public class V1RiotAPIService extends AbstractRestService {
-    private final RestTemplate restTemplate;
+public class V1RiotAPIService extends AbstractRestService{
+
     private final RiotURLResolver riotURLResolver;
 
-    @Override
+    public V1RiotAPIService(@Autowired RestTemplate restTemplate, RiotURLResolver riotURLResolver) {
+        super(restTemplate);
+        this.riotURLResolver = riotURLResolver;
+    }
+
     public String getPUUID(String gameName, String tagLine) {
         final String fullURL = riotURLResolver.getRiotAccountByRiotIdURL(gameName, tagLine);
-
-        return doExecute(() -> {
-            AccountDTO body = restTemplate.getForEntity(fullURL, AccountDTO.class).getBody();
-
-            return Optional.ofNullable(body)
-                .map(AccountDTO::getPuuid)
-                .orElse(null);
-        });
+        return executeAndGetBody(fullURL, AccountDTO.class)
+            .map(AccountDTO::getPuuid)
+            .orElseThrow(() -> new RiotAPIException("Account not found for gameName: " + gameName + ", tagLine: " + tagLine, HttpStatus.NOT_FOUND));
     }
-    @Override
+
     public List<String> getMatchIdList(String puuid) {
         final String fullURL = riotURLResolver.getMatchListURL(puuid);
-
-        return doExecute(() ->
-            restTemplate.exchange(fullURL, HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {}).getBody()
-        );
+        return executeAndGetBody(fullURL, new ParameterizedTypeReference<List<String>>() {})
+            .orElse(Collections.emptyList());
     }
-    @Override
+
     public Object getMatchDetails(String matchId) {
         final String fullURL = riotURLResolver.getMatchDetailURL(matchId);
-
-        return doExecute(() ->
-            restTemplate.getForObject(fullURL, Object.class)
-        );
+        return executeAndGetBody(fullURL, Object.class)
+            .orElseThrow(() -> new RiotAPIException("Match not found for matchId: " + matchId, HttpStatus.NOT_FOUND));
     }
 
-    @Override
     public AccountDTO getAccountByPuuid(String puuid) {
         final String fullURL = riotURLResolver.getRiotAccountByPuuidURL(puuid);
-
-        return doExecute(() -> restTemplate.getForEntity(fullURL, AccountDTO.class).getBody());
+        return executeAndGetBody(fullURL, AccountDTO.class)
+            .orElseThrow(() -> new RiotAPIException("Account not found for puuid: " + puuid, HttpStatus.NOT_FOUND));
     }
+
+    public SummonerDTO getSummonerByPuuid(String puuid) {
+        final String fullURL = riotURLResolver.getSummonerByPuuid(puuid);
+        return executeAndGetBody(fullURL, SummonerDTO.class)
+            .orElseThrow(() -> new RiotAPIException("Summoner not found for puuid: " + puuid, HttpStatus.NOT_FOUND));
+    }
+
+    public Set<LeagueEntryDTO> getLeagueEntriesInAllQueuesByAccountId(String accountId) {
+        final String fullURL = riotURLResolver.getLeagueEntiresInAllQueuesByAccountIdURL(accountId);
+        return executeAndGetBody(fullURL, new ParameterizedTypeReference<Set<LeagueEntryDTO>>() {})
+            .orElse(Collections.emptySet());
+    }
+
+
 }

@@ -1,8 +1,12 @@
 package site.klol.batch.riot.exception;
 
+import org.springframework.http.HttpStatus;
 import site.klol.batch.common.exception.NoSkipException;
 
 public class InvalidRiotKeyException extends NoSkipException {
+    private final HttpStatus status = HttpStatus.BAD_REQUEST;
+    private final String errorCode = String.valueOf(HttpStatus.BAD_REQUEST.value());
+
     public InvalidRiotKeyException() {
     }
 

@@ -24,6 +24,7 @@ CREATE TABLE summoner (
     smnr_icon VARCHAR(255) DEFAULT 'default_icon_url',
     smnr_level INT DEFAULT 1,
     smnr_tier VARCHAR(20) DEFAULT 'UNRANK',
+    smnr_rank VARCHAR(20) DEFAULT '4',
     smnr_lp INT DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

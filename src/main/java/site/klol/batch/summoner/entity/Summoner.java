@@ -55,8 +55,12 @@ public class Summoner extends BaseEntity {
     @Column(name = "smnr_tier", length = 20)
     private String summonerTier;
 
+    @Column(name = "smnr_rank")
+    private Integer summonerRank;
+
     @Column(name = "smnr_lp")
     private Integer summonerLp;
+
 
     public boolean isChangedAccount(AccountDTO accountByPUUID) {
         final String gameName = accountByPUUID.getGameName();

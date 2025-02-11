@@ -1,5 +1,6 @@
 package site.klol.batch.riot;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import site.klol.batch.riot.exception.RiotKeyNotFoundException;
 

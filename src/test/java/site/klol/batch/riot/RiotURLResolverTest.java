@@ -57,7 +57,7 @@ class RiotURLResolverTest {
         when(riotAPIKeyManager.getApiKey()).thenReturn("test-api-key");
 
         // when
-        String result = riotURLResolver.getRiotAccountURL(gameName, tagLine);
+        String result = riotURLResolver.getRiotAccountByRiotIdURL(gameName, tagLine);
 
         // then
         String expectedUrl = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/testUser/KR1?api_key=test-api-key";
