@@ -60,7 +60,7 @@ public class V1RiotAPIService extends AbstractRestService {
 
     @Override
     public String getPUUID(String gameName, String tagLine) {
-        final String fullURL = riotURLResolver.getRiotAccountURL(gameName, tagLine);
+        final String fullURL = riotURLResolver.getRiotAccountByRiotIdURL(gameName, tagLine);
 
         return doExecute(() -> {
             AccountDTO body = restTemplate.getForEntity(fullURL, AccountDTO.class).getBody();
@@ -88,8 +88,8 @@ public class V1RiotAPIService extends AbstractRestService {
     }
 
     @Override
-    public AccountDTO getAccountByPUUID(String puuid) {
-        final String fullURL = riotURLResolver.getMatchDetailURL(puuid);
+    public AccountDTO getAccountByPuuid(String puuid) {
+        final String fullURL = riotURLResolver.getRiotAccountByPuuidURL(puuid);
 
         return doExecute(() -> restTemplate.getForEntity(fullURL, AccountDTO.class).getBody());
     }

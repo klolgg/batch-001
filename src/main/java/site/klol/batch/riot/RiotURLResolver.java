@@ -26,7 +26,6 @@ public class RiotURLResolver {
             .withPathVariable("tagLine", tagLine)
             .build();
     }
-
     public String getMatchListURL(String puuid) {
         return new RiotURLBuilder(riotProperties, riotAPIKeyManager)
             .withRegion(riotProperties.getApi().getMatchV5().getRegion())

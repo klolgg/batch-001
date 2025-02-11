@@ -31,5 +31,5 @@ public interface RiotAPIService {
      * @param puuid
      * @return
      */
-    AccountDTO getAccountByPUUID(String puuid);
+    AccountDTO getAccountByPuuid(String puuid);
 }

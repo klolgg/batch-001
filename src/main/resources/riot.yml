@@ -4,6 +4,7 @@ riot:
     account-v1:
       region: asia
       account-by-riot-id: /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}
+      account-by-puuid: /riot/account/v1/accounts/by-puuid/{puuid}
     match-v5:
       region: asia
       match-list-by-puuid: /lol/match/v5/matches/by-puuid/{puuid}/ids

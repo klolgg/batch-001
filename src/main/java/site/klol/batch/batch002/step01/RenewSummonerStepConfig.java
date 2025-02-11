@@ -56,7 +56,7 @@ public class RenewSummonerStepConfig {
         return summoner -> {
             final String puuid = summoner.getPuuid();
 
-            final AccountDTO accountByPUUID = v1RiotAPIService.getAccountByPUUID(puuid);
+            final AccountDTO accountByPUUID = v1RiotAPIService.getAccountByPuuid(puuid);
 
             if(summoner.isChangedAccount(accountByPUUID)){
                 summoner.updateAccount(accountByPUUID);
