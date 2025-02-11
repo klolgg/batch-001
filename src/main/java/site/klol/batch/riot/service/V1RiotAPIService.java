@@ -86,4 +86,11 @@ public class V1RiotAPIService extends AbstractRestService {
             restTemplate.getForObject(fullURL, Object.class)
         );
     }
+
+    @Override
+    public AccountDTO getAccountByPUUID(String puuid) {
+        final String fullURL = riotURLResolver.getMatchDetailURL(puuid);
+
+        return doExecute(() -> restTemplate.getForEntity(fullURL, AccountDTO.class).getBody());
+    }
 }
