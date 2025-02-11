@@ -1,48 +1,84 @@
 package site.klol.batch.riot;
 
+import static site.klol.batch.riot.RiotURLResolver.API_KEY_NAME;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import site.klol.batch.common.LoggerContext;
+import site.klol.batch.riot.config.RiotProperties;
 
-import java.util.function.Supplier;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class RiotURLResolver {
-    @Value("${riot.domain}")
-    private String domain;
-    @Value("${riot.api.account-v1.account-by-riot-id}")
-    private String riotAccountURL;
-    @Value("${riot.api.match-v5.match-list-by-puuid}")
-    private String matchListURL;
-    @Value("${riot.api.match-v5.match-detail-by-match-id}")
-    private String matchDetailURL;
-    private static final String API_KEY_NAME = "api_key";
+    public static final String API_KEY_NAME = "api_key";
 
+    private final RiotProperties riotProperties;
     private final RiotAPIKeyManager riotAPIKeyManager;
 
     public String getRiotAccountURL(String gameName, String tagLine) {
-        return getURL(()-> riotAccountURL.replace("{gameName}", gameName).replace("{tagLine}", tagLine));
+        return new RiotURLBuilder(riotProperties, riotAPIKeyManager)
+            .withRegion(riotProperties.getApi().getAccountV1().getRegion())
+            .withEndpoint(riotProperties.getApi().getAccountV1().getAccountByRiotId())
+            .withPathVariable("gameName", gameName)
+            .withPathVariable("tagLine", tagLine)
+            .build();
     }
 
     public String getMatchListURL(String puuid) {
-        return getURL(() -> matchListURL.replace("{puuid}", puuid));
+        return new RiotURLBuilder(riotProperties, riotAPIKeyManager)
+            .withRegion(riotProperties.getApi().getMatchV5().getRegion())
+            .withEndpoint(riotProperties.getApi().getMatchV5().getMatchListByPuuid())
+            .withPathVariable("puuid", puuid)
+            .build();
     }
 
-    public String getMatchDetailURL(String matchId){
-        return getURL(() -> matchDetailURL.replace("{matchId}", matchId));
+    public String getMatchDetailURL(String matchId) {
+        return new RiotURLBuilder(riotProperties, riotAPIKeyManager)
+            .withRegion(riotProperties.getApi().getMatchV5().getRegion())
+            .withEndpoint(riotProperties.getApi().getMatchV5().getMatchDetailByMatchId())
+            .withPathVariable("matchId", matchId)
+            .build();
     }
-    private String getURL(Supplier<String> supplier) {
+}
 
-        final String url = supplier.get();
+class RiotURLBuilder {
+    private final RiotProperties riotProperties;
+    private final RiotAPIKeyManager riotAPIKeyManager;
+    private String region;
+    private String endpoint;
+    private Map<String, String> pathVariables;
+
+    public RiotURLBuilder(RiotProperties riotProperties, RiotAPIKeyManager riotAPIKeyManager) {
+        this.riotProperties = riotProperties;
+        this.riotAPIKeyManager = riotAPIKeyManager;
+        this.pathVariables = new HashMap<>();
+    }
+
+    public RiotURLBuilder withRegion(String region) {
+        this.region = region;
+        return this;
+    }
+
+    public RiotURLBuilder withEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+        return this;
+    }
+
+    public RiotURLBuilder withPathVariable(String name, String value) {
+        this.pathVariables.put(name, value);
+        return this;
+    }
+
+    public String build() {
+        String url = endpoint;
+        for (Map.Entry<String, String> entry : pathVariables.entrySet()) {
+            url = url.replace("{" + entry.getKey() + "}", entry.getValue());
+        }
         LoggerContext.getLogger().info("URL: {}", url);
 
-        return domain + addAPIKey(url);
+        return "https://" + region + "." + riotProperties.getDomain() + url + "?" + API_KEY_NAME + "=" + riotAPIKeyManager.getApiKey();
     }
-
-    private String addAPIKey(String url) {
-        return url + "?" + API_KEY_NAME + "=" + riotAPIKeyManager.getApiKey();
-    }
-
 }
