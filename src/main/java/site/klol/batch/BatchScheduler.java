@@ -25,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 public class BatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job batch001Job;
+    private final Job batch002Job;
 
     @Async
     @Scheduled(cron = "0 */30 * * * *")
@@ -37,5 +38,19 @@ public class BatchScheduler {
 
         jobLauncher.run(batch001Job, jobParameters);
     }
+
+    @Async
+    @Scheduled(cron = "0 */30 * * * *")
+    public void runBatch002Job()
+        throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+        JobParameters jobParameters = new JobParametersBuilder()
+            .addString(JobParamConstant.REQUEST_DATE, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
+            .addString(JobParamConstant.REQUEST_TIME, LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")))
+            .toJobParameters();
+
+        jobLauncher.run(batch002Job, jobParameters);
+    }
+
+
 
 }
