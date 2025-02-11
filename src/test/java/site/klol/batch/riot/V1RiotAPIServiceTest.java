@@ -13,4 +13,12 @@ class V1RiotAPIServiceTest {
         ResponseEntity<String> forEntity = restTemplate.getForEntity(url, String.class);
         System.out.println(forEntity);
     }
+
+    @Test
+    void getAccountByPuuid() {
+        String url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-puuid/_PT8-VdDjDwBeoLpGPstPjxyLSnp_ra6IVPz-XpnyEr5OKutq-siMcML7sh6s1_2SKD09Afy2pwkQw?api_key=RGAPI-ec4f7460-fe5a-4fd6-b386-452f2913c6e2";
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> forEntity = restTemplate.getForEntity(url, String.class);
+        System.out.println(forEntity);
+    }
 }

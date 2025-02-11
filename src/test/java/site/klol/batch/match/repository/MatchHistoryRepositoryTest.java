@@ -49,6 +49,7 @@ class MatchHistoryRepositoryTest {
         matchHistoryRepository.save(match);
         matchHistoryRepository.save(match2);
 
+
         return saveSummoner;
     }
 }
