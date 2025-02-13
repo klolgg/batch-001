@@ -84,8 +84,8 @@ class Batch001JobConfigTest {
             .summonerId("뾰로롱")
             .summonerTag("1111")
             .summonerIcon("testIconUrl")
-            .summonerLevel(1)
-            .summonerLp(1)
+            .summonerLevel("1")
+            .summonerLp("0")
             .summonerTier("testTier")
             .build();
         Summoner summoner2 = Summoner.builder()
@@ -95,8 +95,8 @@ class Batch001JobConfigTest {
             .summonerId("Destiny")
             .summonerTag("KR1")
             .summonerIcon("testIconUrl")
-            .summonerLevel(1)
-            .summonerLp(1)
+            .summonerLevel("1")
+            .summonerLp("0")
             .summonerTier("testTier")
             .build();
 

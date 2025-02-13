@@ -111,6 +111,4 @@ public class V1RiotAPIService extends AbstractRestService{
         return executeAndGetBody(fullURL, new ParameterizedTypeReference<Set<LeagueEntryDTO>>() {})
             .orElse(Collections.emptySet());
     }
-
-
 }

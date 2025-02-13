@@ -8,7 +8,8 @@ class V1RiotAPIServiceTest {
 
     @Test
     void getPUUID() {
-        String url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/뾰로롱/1111?api_key=RGAPI-ec4f7460-fe5a-4fd6-b386-452f2913c6e2";
+//        String url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/뾰로롱/1111?api_key=RGAPI-ec4f7460-fe5a-4fd6-b386-452f2913c6e2";
+        String url = "https://asia.api.riotgames.com/riot/account/v1/accounts/by-riot-id/NaNiNo/KR1?api_key=RGAPI-43dab18b-fdfb-4621-933b-3cef58fd2fd9";
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> forEntity = restTemplate.getForEntity(url, String.class);
         System.out.println(forEntity);
