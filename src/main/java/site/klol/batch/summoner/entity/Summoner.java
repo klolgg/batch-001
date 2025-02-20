@@ -49,11 +49,14 @@ public class Summoner extends BaseEntity {
     private String summonerIcon;
 
     @Column(name = "smnr_level")
-    private Integer summonerLevel;
+    private String summonerLevel;
 
     @Column(name = "smnr_tier", length = 20)
     private String summonerTier;
 
     @Column(name = "smnr_lp")
-    private Integer summonerLp;
+    private String summonerLp;
+
+    @Column(name= "smnr_rank")
+    private String summonerRank;
 }

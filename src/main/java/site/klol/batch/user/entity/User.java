@@ -24,7 +24,7 @@ public class User extends BaseEntity {
     @Column(name = "nickname", nullable = false, length = 50)
     private String nickname;
 
-    @Column(name="is_school_verified", nullable = false, length = 1, columnDefinition = "char(1)")
+    @Column(name="is_school_verified", nullable = false, length = 2, columnDefinition = "VARCHAR(2)")
     @Enumerated(EnumType.STRING)
     private YNFlag isSchoolVerified;
 

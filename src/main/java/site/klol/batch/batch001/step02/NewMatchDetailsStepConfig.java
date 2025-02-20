@@ -19,6 +19,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.transaction.PlatformTransactionManager;
+import site.klol.batch.common.LoggerContext;
 import site.klol.batch.common.exception.NoSkipException;
 import site.klol.batch.match.entity.MatchHistory;
 import site.klol.batch.riot.service.V1RiotAPIService;
@@ -71,6 +72,7 @@ public class NewMatchDetailsStepConfig {
             boolean matchDetails = mongoTemplate.exists(query, "match_details");
 
             if (matchDetails) {
+                LoggerContext.getLogger().info("matchId is already exist!: {}", matchHistory.getMatchId());
                 return null;
             }
             return v1RiotAPIService.getMatchDetails(matchHistory.getMatchId());

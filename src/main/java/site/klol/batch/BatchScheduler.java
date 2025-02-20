@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import site.klol.batch.batch001.constants.JobParamConstant;
+import site.klol.batch.common.constants.JobParamConstant;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

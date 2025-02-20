@@ -7,14 +7,15 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.JobParametersValidator;
-import site.klol.batch.batch001.constants.JobParamConstant;
+import site.klol.batch.common.constants.JobParamConstant;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import site.klol.batch.common.DateTimeJobParamValidator;
 
-class Batch001JobParamValidatorTest {
-    JobParametersValidator jobParametersValidator = new Batch001JobParamValidator();
+class DateTimeJobParamValidatorTest {
+    JobParametersValidator jobParametersValidator = new DateTimeJobParamValidator();
 
     @Test
     @DisplayName("성공 테스트: 수동 실행이면 유효성 검사 없이 실행")
