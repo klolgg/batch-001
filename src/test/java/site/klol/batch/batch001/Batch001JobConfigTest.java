@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import site.klol.batch.batch001.constants.JobParamConstant;
+import site.klol.batch.common.constants.JobParamConstant;
 import site.klol.batch.common.enums.YNFlag;
 import site.klol.batch.match.entity.MatchHistory;
 import site.klol.batch.match.repository.MatchHistoryRepository;
@@ -83,8 +83,8 @@ class Batch001JobConfigTest {
             .summonerId("뾰로롱")
             .summonerTag("1111")
             .summonerIcon("testIconUrl")
-            .summonerLevel(1)
-            .summonerLp(1)
+            .summonerLevel("1")
+            .summonerLp("1")
             .summonerTier("testTier")
             .build();
         Summoner summoner2 = Summoner.builder()
@@ -93,8 +93,8 @@ class Batch001JobConfigTest {
             .summonerId("Destiny")
             .summonerTag("KR1")
             .summonerIcon("testIconUrl")
-            .summonerLevel(1)
-            .summonerLp(1)
+            .summonerLevel("1")
+            .summonerLp("1")
             .summonerTier("testTier")
             .build();
 

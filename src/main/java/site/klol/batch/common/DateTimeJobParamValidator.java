@@ -1,11 +1,10 @@
-package site.klol.batch.batch001;
+package site.klol.batch.common;
 
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.JobParametersValidator;
 import org.springframework.stereotype.Component;
-import site.klol.batch.batch001.constants.JobParamConstant;
-import site.klol.batch.common.LoggerContext;
+import site.klol.batch.common.constants.JobParamConstant;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,7 +17,7 @@ import java.util.Optional;
  * Ensures that date, time, and manual run parameters are properly formatted and valid.
  */
 @Component
-public class Batch001JobParamValidator implements JobParametersValidator {
+public class DateTimeJobParamValidator implements JobParametersValidator {
 
     private static final String TIME_PATTERN = "^([01]\\d|2[0-3]):([0-5]\\d)$";
     private static final String TIME_FORMAT = "HH:mm";
@@ -26,7 +25,7 @@ public class Batch001JobParamValidator implements JobParametersValidator {
 
     @Override
     public void validate(JobParameters jobParameters) throws JobParametersInvalidException {
-        LoggerContext.getLogger().debug("Validating job parameters: {}", jobParameters);
+        LoggerContext.getLogger().info("Validating job parameters: {}", jobParameters);
         
         if (jobParameters == null) {
             throw new JobParametersInvalidException("Job parameters must not be null");

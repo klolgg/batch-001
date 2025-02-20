@@ -16,7 +16,10 @@ import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.transaction.PlatformTransactionManager;
+import site.klol.batch.common.LoggerContext;
 import site.klol.batch.common.exception.NoSkipException;
 import site.klol.batch.match.entity.MatchHistory;
 import site.klol.batch.riot.service.V1RiotAPIService;
@@ -62,7 +65,18 @@ public class NewMatchDetailsStepConfig {
     @Bean
     @StepScope
     public ItemProcessor<MatchHistory, Object> matchDetailsProcessor() {
-        return matchHistory -> v1RiotAPIService.getMatchDetails(matchHistory.getMatchId());
+        return matchHistory -> {
+            Query query = new Query();
+            query.addCriteria(Criteria.where("metadata.matchId").is(matchHistory.getMatchId()));
+
+            boolean matchDetails = mongoTemplate.exists(query, "match_details");
+
+            if (matchDetails) {
+                LoggerContext.getLogger().info("matchId is already exist!: {}", matchHistory.getMatchId());
+                return null;
+            }
+            return v1RiotAPIService.getMatchDetails(matchHistory.getMatchId());
+        };
     }
 
     @Bean
