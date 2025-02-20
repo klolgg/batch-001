@@ -9,7 +9,7 @@ import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,10 +18,11 @@ import site.klol.batch.batch001.constants.JobParamConstant;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import site.klol.batch.common.config.SchedulerCondition;
 
 @Component
 @RequiredArgsConstructor
-@Profile({"!cli","prd","schd"})
+@Conditional(SchedulerCondition.class)
 public class BatchScheduler {
     private final JobLauncher jobLauncher;
     private final Job batch001Job;
